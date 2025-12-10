@@ -1,36 +1,56 @@
+export type UserRole = "user" | "admin" | "moderator";
+export type PostType = "tweet" | "profile";
+export type PostStatus = "active" | "archived";
+export type TransactionType = "earn" | "boost" | "refund" | "deposit"; // inferred common types
+
 export interface Profile {
-  id: string; // UUID
-  role: string;
-  username: string;
-  full_name: string;
-  avatar_url: string;
+  id: string; // uuid
+  username: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
   credits_balance: number;
   total_credits_earned: number;
-  role: "user" | "admin" | "moderator";
-  twitter_handle?: string;
+  role: UserRole;
+  twitter_handle: string | null;
+  is_verified: boolean | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Post {
-  id: string; // UUID
-  user_id: string; // UUID references Profile.id
+  id: string; // uuid
+  user_id: string; // uuid
   tweet_id: string;
   original_url: string;
-  type: "tweet" | "profile";
-  status: "active" | "archived";
+  type: PostType;
+  status: PostStatus;
+  target_engagements: number | null;
   current_engagements: number;
-}
-
-export interface CreditLedger {
-  id: string; // UUID
-  amount: number;
-  transaction_type: string; // Could be 'earn', 'boost', 'refund', etc.
-  description: string;
-  created_at: string; // ISO timestamp
+  created_at: string;
+  expires_at: string | null;
 }
 
 export interface Interaction {
-  id: string; // UUID
-  user_id: string; // UUID references Profile.id
-  post_id: string; // UUID references Post.id
-  verified_at: string; // ISO timestamp
+  id: string; // uuid
+  user_id: string; // uuid
+  post_id: string; // uuid
+  clicked_at: string;
+  verified_at: string | null;
+  is_valid: boolean | null;
+}
+
+export interface CreditLedger {
+  id: string; // uuid
+  user_id: string; // uuid
+  amount: number;
+  transaction_type: TransactionType;
+  description: string | null;
+  metadata: Record<string, any> | null; // jsonb
+  created_at: string;
+}
+
+export interface AppConfig {
+  key: string;
+  value: Record<string, any>; // jsonb
+  description: string | null;
 }
