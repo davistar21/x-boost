@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, User, Trophy, Link as LinkIcon, Menu } from "lucide-react";
+import { CreatePostDialog } from "@/components/feed/CreatePostDialog";
 
 export function Navbar() {
   const { signInWithGoogle } = useAuth();
@@ -44,10 +45,10 @@ export function Navbar() {
         {/* Navigation - Hidden on mobile for simplicity in this step, or simple links */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <Link
-            href="/dashboard"
+            href="/feed"
             className="transition-colors hover:text-foreground/80 text-foreground/60"
           >
-            Dashboard
+            Feed
           </Link>
           <Link
             href="/earn"
@@ -71,6 +72,8 @@ export function Navbar() {
             </Button>
           ) : (
             <>
+              <CreatePostDialog />
+
               {profile && (
                 <Badge
                   variant="secondary"
