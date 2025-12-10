@@ -155,7 +155,7 @@ export function ProfileTabs({ initialPosts, creditLedger }: ProfileTabsProps) {
                     <TableRow key={tx.id}>
                       <TableCell>
                         <span className="font-medium capitalize">
-                          {tx.transaction_type}
+                          {tx.transaction_type.replace("_", " ")}
                         </span>
                         {tx.description && (
                           <span className="text-muted-foreground text-sm block">

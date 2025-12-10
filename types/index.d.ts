@@ -1,7 +1,12 @@
 export type UserRole = "user" | "admin" | "moderator";
 export type PostType = "tweet" | "profile";
 export type PostStatus = "active" | "archived";
-export type TransactionType = "earn" | "boost" | "refund" | "deposit"; // inferred common types
+export type TransactionType =
+  | "signup_bonus"
+  | "engagement_earn"
+  | "post_spend"
+  | "admin_adjustment"
+  | "referral_bonus"; // inferred common types
 
 export interface Profile {
   id: string; // uuid

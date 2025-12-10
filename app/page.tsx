@@ -13,7 +13,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden items-center justify-center flex flex-col text-center px-4">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/20 via-background to-background"></div>
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-primary/20 via-background to-background"></div>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-500/20 rounded-full blur-[100px] -z-10 opacity-50"></div>
 
         <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80 mb-6">
@@ -22,7 +22,7 @@ export default function LandingPage() {
 
         <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight lg:text-7xl mb-6">
           Supercharge your <br />
-          <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-500">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-500">
             Social Presence
           </span>
         </h1>

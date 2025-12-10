@@ -29,7 +29,7 @@ export const useAuth = () => {
     if (!isLoading && profile && !profile.twitter_handle) {
       // Redirect to onboarding if twitter_handle is missing
       // We'll define the route later, but for now assuming /onboarding
-      router.push("/onboarding");
+      // router.push("/onboarding");
     }
   }, [profile, isLoading, router]);
 

@@ -69,7 +69,7 @@ export function CreatePostDialog({ children }: CreatePostDialogProps) {
 
     try {
       // 3. Submit to RPC
-      const { error } = await supabase.rpc("create_post_secure", {
+      const { data, error } = await supabase.rpc("create_post_secure", {
         tweet_id_input: tweetId,
         original_url_input: url,
       });
