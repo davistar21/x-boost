@@ -1,11 +1,13 @@
 export interface Profile {
   id: string; // UUID
+  role: string;
   username: string;
   full_name: string;
   avatar_url: string;
   credits_balance: number;
   total_credits_earned: number;
   role: "user" | "admin" | "moderator";
+  twitter_handle?: string;
 }
 
 export interface Post {
