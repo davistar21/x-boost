@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Rocket, Loader2 } from "lucide-react";
+import confetti from "canvas-confetti";
 
 interface CreatePostDialogProps {
   children?: React.ReactNode; // To allow custom trigger
@@ -27,6 +28,8 @@ export function CreatePostDialog({ children }: CreatePostDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [progress, setProgress] = useState(0);
 
   const COST = 5;
 
@@ -43,6 +46,11 @@ export function CreatePostDialog({ children }: CreatePostDialogProps) {
     return null;
   };
 
+  const simulateProgress = async (val: number, ms: number) => {
+    setProgress(val);
+    await new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -51,24 +59,34 @@ export function CreatePostDialog({ children }: CreatePostDialogProps) {
       return;
     }
 
+    setLoading(true);
+    setProgress(10);
+    setStatusMessage("Checking credits...");
+
     // 1. Check Credits
     if (profile.credits_balance < COST) {
       toast.error(`Insufficient credits. You need ${COST} credits.`);
+      setLoading(false);
       return;
     }
-
-    setLoading(true);
+    await simulateProgress(30, 600);
 
     // 2. Validate URL and Extract ID
+    setStatusMessage("Verifying Tweet URL...");
     const tweetId = extractTweetId(url);
     if (!tweetId) {
       toast.error("Invalid Twitter/X URL. Please check the link.");
       setLoading(false);
       return;
     }
+    await simulateProgress(60, 800);
 
     try {
       // 3. Submit to RPC
+      setStatusMessage("Boosting your tweet...");
+      // Artificial delay to show the final step clearly
+      await simulateProgress(80, 500);
+
       const { data, error } = await supabase.rpc("create_post_secure", {
         tweet_id_input: tweetId,
         original_url_input: url,
@@ -76,9 +94,18 @@ export function CreatePostDialog({ children }: CreatePostDialogProps) {
 
       if (error) throw error;
 
+      setProgress(100);
+      setStatusMessage("Done!");
+      await simulateProgress(100, 300);
+
       // 4. Success handling
       toast.success("Tweet Boosted!", {
         description: `${COST} credits deducted.`,
+      });
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
       });
       setUrl("");
       setIsOpen(false);
@@ -90,6 +117,8 @@ export function CreatePostDialog({ children }: CreatePostDialogProps) {
       toast.error(error.message || "Failed to boost tweet.");
     } finally {
       setLoading(false);
+      setProgress(0);
+      setStatusMessage("");
     }
   };
 
@@ -129,6 +158,22 @@ export function CreatePostDialog({ children }: CreatePostDialogProps) {
               required
             />
           </div>
+
+          {loading && (
+            <div className="space-y-1">
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>{statusMessage}</span>
+                <span>{progress}%</span>
+              </div>
+              <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all duration-300 ease-in-out"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
           <DialogFooter>
             <Button type="submit" disabled={loading} className="w-full">
               {loading ? (

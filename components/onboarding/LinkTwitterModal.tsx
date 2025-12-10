@@ -28,10 +28,14 @@ export function LinkTwitterModal() {
     // Open only if user is logged in, profile loaded, and no twitter handle
     if (user && profile && !profile.twitter_handle) {
       setIsOpen(true);
-    } else {
-      setIsOpen(false);
     }
   }, [user, profile]);
+
+  useEffect(() => {
+    const handleOpenEvent = () => setIsOpen(true);
+    window.addEventListener("open-link-modal", handleOpenEvent);
+    return () => window.removeEventListener("open-link-modal", handleOpenEvent);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,11 +110,8 @@ export function LinkTwitterModal() {
     <Dialog
       open={isOpen}
       onOpenChange={(open) => {
-        // Prevent closing if it's mandatory (force-open)
-        // If profile loaded and no handle, keep it open unless we want to allow skipping?
-        // Prompt says "Force-open". So we can return early or keep it true.
-        // However, standard onOpenChange might be triggered by clicking outside.
-        // We'll force it to stay true if condition is met.
+        // STRICT MODE: If user is logged in but has no twitter handle,
+        // DO NOT allow closing the modal.
         if (user && profile && !profile.twitter_handle) {
           setIsOpen(true);
         } else {
