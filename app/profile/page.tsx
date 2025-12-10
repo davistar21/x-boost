@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import { ProfileTabs } from "@/components/profile/ProfileTabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { redirect } from "next/navigation";
@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export default async function ProfilePage() {
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

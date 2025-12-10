@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useUserStore } from "@/store/useUserStore";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase/client";
 import {
   Dialog,
   DialogContent,

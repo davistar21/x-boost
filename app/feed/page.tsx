@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import { FeedList } from "@/components/feed/FeedList";
 import { Post } from "@/types";
 
@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function FeedPage() {
   // Server-side fetch
+  const supabase = await createClient();
   const { data: posts, error } = await supabase
     .from("posts")
     .select("*")

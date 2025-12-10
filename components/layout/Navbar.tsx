@@ -28,7 +28,7 @@ export function Navbar() {
     // or import supabase here. Ideally useAuth should expose signOut.
     const { createClient } = await import("@supabase/supabase-js"); // Dynamic import to avoid issues or just import standard client
     // Actually we have valid client at @/lib/supabase
-    const { supabase } = await import("@/lib/supabase");
+    const { supabase } = await import("@/lib/supabase/client");
     await supabase.auth.signOut();
     clearUser();
     window.location.reload(); // Force refresh to clear any state/cache

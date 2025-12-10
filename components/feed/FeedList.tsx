@@ -4,7 +4,7 @@ import { useState } from "react";
 import { TweetCard } from "@/components/feed/TweetCard";
 import { EngagementTimer } from "@/components/feed/EngagementTimer";
 import { Post } from "@/types";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase/client";
 import { useUserStore } from "@/store/useUserStore";
 import { toast } from "sonner";
 import { Coins } from "lucide-react";

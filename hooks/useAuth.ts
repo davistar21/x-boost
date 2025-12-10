@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase/client";
 import { useUserStore } from "@/store/useUserStore";
 
 export const useAuth = () => {
@@ -37,7 +37,7 @@ export const useAuth = () => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: `${window.location.origin}/feed`,
       },
     });
   };
