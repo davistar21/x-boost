@@ -19,20 +19,11 @@ import { CreatePostDialog } from "@/components/feed/CreatePostDialog";
 import { useRouter } from "next/navigation";
 
 export function Navbar() {
-  const { signInWithGoogle } = useAuth();
-  const { user, profile, clearUser } = useUserStore();
+  const { signInWithGoogle, signOut } = useAuth();
+  const { user, profile, isLoading } = useUserStore();
   const router = useRouter();
   const handleLogout = async () => {
-    // We would typically call supabase.auth.signOut() here
-    // but importing supabase client directly in components can be tricky if not careful
-    // For now, let's just use the store clearUser and we can add the actual signOut logic
-    // or import supabase here. Ideally useAuth should expose signOut.
-    const { createClient } = await import("@supabase/supabase-js"); // Dynamic import to avoid issues or just import standard client
-    // Actually we have valid client at @/lib/supabase
-    const { supabase } = await import("@/lib/supabase/client");
-    await supabase.auth.signOut();
-    clearUser();
-    router.push("/"); // Force refresh to clear any state/cache
+    await signOut();
   };
 
   return (
@@ -51,23 +42,13 @@ export function Navbar() {
           >
             Feed
           </Link>
-          <Link
-            href="/earn"
-            className="transition-colors hover:text-foreground/80 text-foreground/60"
-          >
-            Earn
-          </Link>
-          <Link
-            href="/boost"
-            className="transition-colors hover:text-foreground/80 text-foreground/60"
-          >
-            Boost
-          </Link>
         </nav>
-
         {/* User Actions */}
         <div className="flex items-center gap-4">
-          {!user ? (
+          {isLoading ? (
+            // Loading Skeleton
+            <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+          ) : !user ? (
             <Button onClick={signInWithGoogle} variant="default" size="sm">
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path

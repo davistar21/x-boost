@@ -40,5 +40,8 @@ export const useUserStore = create<UserState>((set) => ({
       set({ isLoading: false });
     }
   },
-  clearUser: () => set({ user: null, profile: null, isLoading: false }),
+  clearUser: () => {
+    set({ user: null, profile: null, isLoading: false });
+    // Optional: clear supabase session if needed here, but usually handled by auth listener
+  },
 }));

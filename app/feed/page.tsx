@@ -8,11 +8,22 @@ export const dynamic = "force-dynamic";
 export default async function FeedPage() {
   // Server-side fetch
   const supabase = await createClient();
-  const { data: posts, error } = await supabase
+  // Filter own posts if logged in
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let query = supabase
     .from("posts")
-    .select("*")
+    .select(
+      "*, profiles:user_id (username, full_name, avatar_url, is_verified, total_credits_earned)"
+    )
     .eq("status", "active")
     .order("created_at", { ascending: false });
+  if (user) {
+    query = query.neq("user_id", user.id);
+  }
+
+  const { data: posts, error } = await query;
 
   if (error) {
     console.error("Error fetching posts:", error);

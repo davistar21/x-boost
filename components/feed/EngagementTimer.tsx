@@ -1,77 +1,81 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Timer, CheckCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface EngagementTimerProps {
-  url: string;
   onComplete: () => void;
+  tweetUrl: string;
 }
 
-type TimerState = "idle" | "counting" | "ready";
-
-export function EngagementTimer({ url, onComplete }: EngagementTimerProps) {
-  const [status, setStatus] = useState<TimerState>("idle");
-  const [timeLeft, setTimeLeft] = useState(10);
+export function EngagementTimer({
+  onComplete,
+  tweetUrl,
+}: EngagementTimerProps) {
+  const [hasClicked, setHasClicked] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [statusText, setStatusText] = useState("Engage");
+  const tabSwitchDetected = useRef(false);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    // track visibility change to guess if they actually went to twitter
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        tabSwitchDetected.current = true;
+      }
+    };
 
-    if (status === "counting" && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    } else if (status === "counting" && timeLeft === 0) {
-      setStatus("ready");
-    }
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
 
-    return () => clearInterval(timer);
-  }, [status, timeLeft]);
+  const handleClick = () => {
+    // 1. Open Twitter
+    window.open(tweetUrl, "_blank");
+    setHasClicked(true);
+    setIsVerifying(true);
+    setStatusText("Waiting for you to engage...");
+    tabSwitchDetected.current = false; // Reset checking
 
-  const handleOpenTweet = () => {
-    window.open(url, "_blank");
-    setStatus("counting");
+    // 2. Start Random Timer (5s - 8s) - Reduced from 10-15s for better UX
+    const randomDelay = Math.floor(Math.random() * (8000 - 5000 + 1) + 5000);
+
+    setTimeout(() => {
+      // 3. Verification Check
+      if (tabSwitchDetected.current) {
+        onComplete();
+      } else {
+        // Did not switch tabs?
+        setIsVerifying(false); // Reset UI to allow retry
+        // Simple alert as per previous logic
+        alert(
+          "We couldn't verify your engagement. Please switch tabs to the tweet and back!"
+        );
+      }
+    }, randomDelay);
   };
 
-  const handleClaim = () => {
-    onComplete();
-  };
-
-  if (status === "idle") {
+  if (isVerifying) {
     return (
       <Button
-        onClick={handleOpenTweet}
-        variant="outline"
-        className="w-full gap-2 border-primary/20 hover:bg-primary/5"
+        disabled
+        variant="secondary"
+        className="w-full gap-2 transition-all duration-500"
       >
-        <ExternalLink className="w-4 h-4" />
-        Open Tweet to Engage
+        <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+        <span className="animate-pulse">{statusText}</span>
       </Button>
     );
   }
 
-  if (status === "counting") {
-    return (
-      <Button disabled className="w-full gap-2 opacity-90 cursor-wait">
-        <Timer className="w-4 h-4 animate-pulse" />
-        Verifying... ({timeLeft}s)
-      </Button>
-    );
-  }
-
-  if (status === "ready") {
-    return (
-      <Button
-        onClick={handleClaim}
-        variant="default" // Primary color for action
-        className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white"
-      >
-        <CheckCircle className="w-4 h-4" />
-        Claim Credit
-      </Button>
-    );
-  }
-
-  return null;
+  return (
+    <Button
+      onClick={handleClick}
+      className="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold"
+    >
+      Engage & Earn
+    </Button>
+  );
 }

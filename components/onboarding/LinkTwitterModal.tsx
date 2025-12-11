@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { supabase } from "@/lib/supabase/client";
+import { useGamificationStore } from "@/store/useGamificationStore";
 import {
   Dialog,
   DialogContent,
@@ -63,20 +64,12 @@ export function LinkTwitterModal() {
 
       if (updateError) throw updateError;
 
-      // 2. Claim Bonus (RPC)
-      // Assuming rpc 'claim_signup_bonus' exists as per instructions.
-      // If it fails (e.g. already claimed or doesn't exist), we log it but don't block the UI update if possible,
-      // OR we treat it as part of the flow. Let's try to call it.
-      const { error: rpcError } = await supabase.rpc("claim_signup_bonus");
+      // 2. Claim Bonus (Centralized Store Logic)
+      const { claimSignupBonus } = useGamificationStore.getState();
+      const bonusSuccess = await claimSignupBonus();
 
-      if (rpcError) {
-        console.warn("Bonus claim failed:", rpcError);
-        // We continue anyway, or maybe show a partial success message?
-        // Prompt says "When they link... call RPC... show confetti".
-        // Use discretion. If update succeeded, user has linked account.
-      } else {
+      if (bonusSuccess) {
         toast.success("Bonus claimed! +10 Credits");
-        // Fire confetti
         confetti({
           particleCount: 100,
           spread: 70,

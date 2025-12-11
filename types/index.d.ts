@@ -1,6 +1,6 @@
 export type UserRole = "user" | "admin" | "moderator";
 export type PostType = "tweet" | "profile";
-export type PostStatus = "active" | "archived";
+export type PostStatus = "active" | "archived" | "flagged" | "banned";
 export type TransactionType =
   | "signup_bonus"
   | "engagement_earn"
@@ -33,6 +33,7 @@ export interface Post {
   current_engagements: number;
   created_at: string;
   expires_at: string | null;
+  profiles?: Profile; // Joined data
 }
 
 export interface Interaction {
