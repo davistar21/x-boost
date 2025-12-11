@@ -19,7 +19,7 @@ import { format } from "date-fns";
 import { Post, Profile } from "@/types";
 
 interface AdminPostListProps {
-  initialPosts: any[]; // Using any because of the join, typically specific type
+  initialPosts: Post[]; // Using any because of the join, typically specific type
 }
 
 export function AdminPostList({ initialPosts }: AdminPostListProps) {
@@ -35,7 +35,7 @@ export function AdminPostList({ initialPosts }: AdminPostListProps) {
     try {
       const { error } = await supabase
         .from("posts")
-        .update({ status: newStatus as any }) // Type casting if needed depending on exact enum
+        .update({ status: newStatus }) // Type casting if needed depending on exact enum
         .eq("id", postId);
 
       if (error) throw error;
@@ -46,7 +46,7 @@ export function AdminPostList({ initialPosts }: AdminPostListProps) {
       setPosts(
         posts.map((p) => (p.id === postId ? { ...p, status: newStatus } : p))
       );
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Failed to update status");
       console.error(error);
     }
@@ -75,7 +75,7 @@ export function AdminPostList({ initialPosts }: AdminPostListProps) {
       } else {
         setFoundUser(data);
       }
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Search failed");
       console.error(error);
     } finally {

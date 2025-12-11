@@ -64,7 +64,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-bold mb-2">Engage to Earn</h3>
               <p className="text-muted-foreground">
-                Like and reply to fellow students' tweets to earn credits
+                Like and reply to fellow students&apos; tweets to earn credits
                 instantly. Verified by our secure timer system.
               </p>
             </div>
