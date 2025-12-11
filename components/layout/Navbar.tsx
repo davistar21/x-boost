@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User, Trophy, Link as LinkIcon, Menu } from "lucide-react";
+import { LogOut, User, Trophy, Link as LinkIcon } from "lucide-react";
 import { CreatePostDialog } from "@/components/feed/CreatePostDialog";
 import { useRouter } from "next/navigation";
 

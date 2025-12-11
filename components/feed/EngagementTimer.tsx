@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface EngagementTimerProps {
   onComplete: () => void;
@@ -50,7 +51,7 @@ export function EngagementTimer({
         // Did not switch tabs?
         setIsVerifying(false); // Reset UI to allow retry
         // Simple alert as per previous logic
-        alert(
+        toast.info(
           "We couldn't verify your engagement. Please switch tabs to the tweet and back!"
         );
       }

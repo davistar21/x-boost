@@ -91,9 +91,11 @@ export function LinkTwitterModal() {
 
       toast.success("X Account linked successfully!");
       setIsOpen(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Link error:", error);
-      toast.error(error.message || "Failed to link account");
+      const msg =
+        error instanceof Error ? error.message : "Failed to link account";
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

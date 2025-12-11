@@ -44,7 +44,7 @@ export function ProfileTabs({ initialPosts, creditLedger }: ProfileTabsProps) {
 
       toast.success("Post archived.");
       router.refresh();
-    } catch (error: any) {
+    } catch {
       toast.error("Failed to archive post.");
     }
   };
