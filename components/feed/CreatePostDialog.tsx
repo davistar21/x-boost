@@ -112,9 +112,11 @@ export function CreatePostDialog({ children }: CreatePostDialogProps) {
 
       // Refresh profile to show new balance
       await fetchProfile(user.id);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Boost error:", error);
-      toast.error(error.message || "Failed to boost tweet.");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to boost tweet."
+      );
     } finally {
       setLoading(false);
       setProgress(0);
